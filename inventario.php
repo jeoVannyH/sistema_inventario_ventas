@@ -33,6 +33,14 @@ $resultado = $conn->query($sql);
         th { background-color: #f1f5f9; color: #334155; font-weight: bold; }
         tr:hover { background-color: #f8fafc; }
         .stock-bajo { color: #dc2626; font-weight: bold; }
+        
+        /* ESTILOS DE LOS BOTONES DE ACCIONES */
+        .btn-editar { 
+            background-color: #f59e0b; color: white; padding: 6px 12px; 
+            text-decoration: none; border-radius: 4px; font-size: 13px; font-weight: bold; margin-right: 5px; 
+        }
+        .btn-editar:hover { background-color: #d97706; }
+        
         .btn-eliminar {
             background-color: #ef4444; color: white; padding: 6px 12px;
             text-decoration: none; border-radius: 4px; font-size: 13px; font-weight: bold;
@@ -77,8 +85,11 @@ $resultado = $conn->query($sql);
                     <td class="<?php echo $claseStock; ?>"> <?php echo $fila['stock']; ?> unds. </td>
                     <td> $<?php echo number_format($fila['precio'], 2); ?> </td>
                     
-                    <!-- ⬇️ LA CELDA CON EL BOTÓN SE AGREGA AQUÍ ABAJO ⬇ -->
                     <td>
+                        <!-- Botón de Editar -->
+                        <a href="editar_producto.php?id=<?php echo $fila['id']; ?>" class="btn-editar">✏️ Editar</a>
+                        
+                        <!-- Botón de Eliminar -->
                         <a href="eliminar_producto.php?id=<?php echo $fila['id']; ?>" 
                            class="btn-eliminar" 
                            onclick="return confirm('¿Estás absolutamente seguro de eliminar el producto: <?php echo $fila['nombre_producto']; ?>?');">
