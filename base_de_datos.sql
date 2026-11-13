@@ -73,3 +73,53 @@ SELECT c.nombre_categoria, SUM(p.stock) AS existencias_totales
 FROM productos p
 INNER JOIN categorias c ON p.categoria_id = c.id
 GROUP BY c.nombre_categoria;
+ 
+ CREATE TABLE IF NOT EXISTS clientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre_completo VARCHAR(150) NOT NULL,
+    tipo_documento ENUM('DUI', 'NIT', 'PASAPORTE') NOT NULL DEFAULT 'DUI',
+    numero_documento VARCHAR(20) NOT NULL UNIQUE,
+    telefono VARCHAR(15) NULL,
+    email VARCHAR(100) NULL,
+    direccion TEXT NULL,
+    tipo_cliente ENUM('FINAL', 'FISCAL') NOT NULL DEFAULT 'FINAL',
+    nrc VARCHAR(20) NULL,
+    limite_credito DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    saldo_actual DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    estado ENUM('ACTIVO', 'BLOQUEADO', 'INACTIVO') NOT NULL DEFAULT 'ACTIVO',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS ventas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    numero_factura VARCHAR(25) NOT NULL UNIQUE,
+    tipo_comprobante ENUM('TICKET', 'FACTURA', 'CREDITO_FISCAL') NOT NULL,
+    cliente_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+    condicion_pago ENUM('CONTADO', 'CREDITO') NOT NULL DEFAULT 'CONTADO',
+    dias_credito INT NOT NULL DEFAULT 0,
+    subtotal DECIMAL(10,2) NOT NULL,
+    iva DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    total DECIMAL(10,2) NOT NULL,
+    estado ENUM('COMPLETADA', 'ANULADA', 'PENDIENTE_PAGO') NOT NULL DEFAULT 'COMPLETADA',
+    fecha_venta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON UPDATE CASCADE,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS detalle_ventas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    venta_id INT NOT NULL,
+    producto_id INT NOT NULL,
+    cantidad INT NOT NULL,
+    precio_unitario DECIMAL(10,2) NOT NULL,
+    subtotal DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (venta_id) REFERENCES ventas(id) ON DELETE CASCADE,
+    FOREIGN KEY (producto_id) REFERENCES productos(id) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO clientes (nombre_completo, tipo_documento, numero_documento, telefono, tipo_cliente, limite_credito, saldo_actual, estado) VALUES
+('Consumidor Final (Venta Rápida)', 'DUI', '00000000-0', '2660-0000', 'FINAL', 0.00, 0.00, 'ACTIVO'),
+('Distribuidora El Progreso S.A. de C.V.', 'NIT', '0614-120598-102-1', '2665-1234', 'FISCAL', 2500.00, 650.00, 'ACTIVO'),
+('Lic. Carlos Alberto Mendoza', 'DUI', '02345678-9', '7890-4321', 'FINAL', 500.00, 480.00, 'ACTIVO'),
+('Comercial Santa Anita', 'NIT', '0614-010190-101-5', '2665-9876', 'FISCAL', 1000.00, 1000.00, 'BLOQUEADO');
