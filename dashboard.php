@@ -79,9 +79,14 @@ $precio_maximo = $fila_caro['max_precio'] ? $fila_caro['max_precio'] : 0;
     <!-- Accesos Rápidos del Sistema -->
     <h2 style="color: #334155;">Módulos del Sistema</h2>
     <div class="menu-modulos">
-        <a href="inventario.php" class="modulo">📦 Ir al Catálogo de Inventario</a>
-        <a href="proveedores.php" class="modulo" style="background:#8b5cf6;">🚚 Módulo de Proveedores</a>
+        <a href="inventario.php" class="modulo">📦 Catálogo de Inventario</a>
+        <a href="proveedores.php" class="modulo" style="background:#8b5cf6;">🚚 Proveedores</a>
+        <a href="nueva_compra.php" class="modulo" style="background:#10b981;">➕ Nueva Compra</a>
+        <a href="historial_compras.php" class="modulo" style="background:#f59e0b;">📜 Historial de Compras</a>
         <a href="#" class="modulo" style="background:#64748b;">🛒 Punto de Venta (Próximamente)</a>
     </div>
+</body>
+</html>
+
 </body>
 </html>
